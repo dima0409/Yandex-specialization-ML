@@ -87,7 +87,7 @@ if __name__ == "__main__":
     for element in dataloader.train_dl:
         ax = plt.subplot(2, 1, 1)
         plt.tight_layout()
-        ax.set_title('answer - {}'.format(element['labels'][0][0][0]))
+        ax.set_title('answer - {}'.format(element['labels'][0]))
         ax.axis('off')
         plt.imshow(element["original_image"][0])
         plt.subplot(2, 1, 2).axis('off')

@@ -36,8 +36,7 @@ class LungsCovidDataset(Dataset):
         cropped_image = io.imread(cropped_img_name)
 
         # Подготавливаем label с типом картинки из таблицы ответов
-        labels = self.labes_frame.iloc[idx, 1:]
-        labels = np.array([labels]).reshape(-1, len(labels))
+        labels = self.labes_frame.iloc[idx, 1]
 
         # Формируем элемент датасета
         sample = {'original_image': original_image, 'cropped_image': cropped_image, 'labels': labels}
