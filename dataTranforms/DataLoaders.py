@@ -24,7 +24,7 @@ def preview_dataset(dataset):
             break
 
 
-class DataLoaders:
+class DataLoadersGenerator:
     def __init__(self, csv_file: str, original_root_dir: str, cropped_root_dir: str):
         self.data_loaders: dict = dict()
         self.providers_info: dict = dict()
@@ -81,10 +81,10 @@ class TrainTestDataLoaders:
 
 
 if __name__ == "__main__":
-    dataloaders = DataLoaders("~/Downloads/data/train_answers.csv", "~/Downloads/data/train_images",
-                              "~/Downloads/data/train_lung_masks")
-    dataloader = dataloaders.data_loaders['first without augmentation']
-    for element in dataloader.train_dl:
+    dataloadersGenerator = DataLoadersGenerator("~/Downloads/data/train_answers.csv", "~/Downloads/data/train_images",
+                                                "~/Downloads/data/train_lung_masks")
+    dataloaders = dataloadersGenerator.data_loaders['first without augmentation']
+    for element in dataloaders.train_dl:
         ax = plt.subplot(2, 1, 1)
         plt.tight_layout()
         ax.set_title('answer - {}'.format(element['labels'][0]))
