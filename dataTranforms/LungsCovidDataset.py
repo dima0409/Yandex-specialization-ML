@@ -32,8 +32,8 @@ class LungsCovidDataset(Dataset):
                                         "img_" + str(self.labes_frame.iloc[idx, 0]) + ".png")
 
         # Записыываем картинки в переменные
-        original_image = io.imread(original_img_name)
-        cropped_image = io.imread(cropped_img_name)
+        original_image = io.imread(original_img_name).reshape(1, 256, 256)
+        cropped_image = io.imread(cropped_img_name).reshape(1, 256, 256)
 
         # Подготавливаем label с типом картинки из таблицы ответов
         labels = self.labes_frame.iloc[idx, 1]
