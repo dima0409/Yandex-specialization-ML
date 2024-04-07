@@ -30,25 +30,23 @@ class Covid(Model):
         self.model = nn.Sequential(
             DoubleConv(1, 64),
             nn.MaxPool2d(2),
+            DoubleConv(64, 64),
+            nn.MaxPool2d(2),
             DoubleConv(64, 128),
             nn.MaxPool2d(2),
             DoubleConv(128, 256),
             nn.MaxPool2d(2),
-            DoubleConv(256, 512),
-            nn.MaxPool2d(2),
-            DoubleConv(512, 512),
-            nn.ConvTranspose2d(512, 256, kernel_size=2, stride=2),
-            DoubleConv(512, 256),
+            DoubleConv(256, 256),
             nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2),
-            DoubleConv(256, 128),
+            DoubleConv(128, 128),
             nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2),
-            DoubleConv(128, 64),
-            nn.ConvTranspose2d(64, 64, kernel_size=2, stride=2),
-            DoubleConv(128, 64),
-            nn.Conv2d(64, 3, kernel_size=1)
+            DoubleConv(64, 64),
+            nn.ConvTranspose2d(64, 32, kernel_size=2, stride=2),
+            DoubleConv(32, 32),
+            nn.Flatten(),
+            nn.Linear(16 * 128 * 256, 3)
         )
 
     def forward(self, x):
         x = self.model(x)
-        x = x.view(x.size(0), -1)
         return F.log_softmax(x, dim=1)
