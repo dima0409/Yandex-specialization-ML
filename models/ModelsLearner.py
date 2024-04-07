@@ -12,10 +12,13 @@ class CovidModels:
         self.__init_models()
 
     def __init_models(self):
+        # Here you can add new models version
         self.models = {
             "firstModel": create_model_info(Covid(), optimizer=torch.optim.Adam, epochs=3)
         }
 
+
+# testing
 if __name__ == "__main__":
     dataLoadersGenerator = DataLoadersGenerator("~/Downloads/data/train_answers.csv", "~/Downloads/data/train_images",
                                                 "~/Downloads/data/train_lung_masks")

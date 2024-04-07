@@ -6,24 +6,6 @@ from torch.utils.data import random_split, DataLoader
 from dataTranforms.LungsCovidDataset import LungsCovidDataset
 
 
-def show_images(i, original_image, cropped_image, labels):
-    ax = plt.subplot(2, 4, i + 1)
-    plt.tight_layout()
-    ax.set_title('Sample №{}\n\nanswer - {}'.format(i, labels))
-    ax.axis('off')
-    plt.imshow(original_image)
-    plt.subplot(2, 4, i + 5).axis('off')
-    plt.imshow(cropped_image)
-
-
-def preview_dataset(dataset):
-    for i, sample in enumerate(dataset):
-        show_images(i, **sample)
-        if i == 3:
-            plt.show()
-            break
-
-
 class DataLoadersGenerator:
     def __init__(self, csv_file: str, original_root_dir: str, cropped_root_dir: str):
         self.data_loaders: dict = dict()
@@ -66,6 +48,24 @@ class DataLoadersGenerator:
         )
 
 
+def show_images(i, original_image, cropped_image, labels):
+    ax = plt.subplot(2, 4, i + 1)
+    plt.tight_layout()
+    ax.set_title('Sample №{}\n\nanswer - {}'.format(i, labels))
+    ax.axis('off')
+    plt.imshow(original_image)
+    plt.subplot(2, 4, i + 5).axis('off')
+    plt.imshow(cropped_image)
+
+
+def preview_dataset(dataset):
+    for i, sample in enumerate(dataset):
+        show_images(i, **sample)
+        if i == 3:
+            plt.show()
+            break
+
+
 @dataclass
 class DatasetInfo:
     dataset: LungsCovidDataset
@@ -80,6 +80,7 @@ class TrainTestDataLoaders:
     test_dl: DataLoader
 
 
+# testing
 if __name__ == "__main__":
     dataloadersGenerator = DataLoadersGenerator("~/Downloads/data/train_answers.csv", "~/Downloads/data/train_images",
                                                 "~/Downloads/data/train_lung_masks")

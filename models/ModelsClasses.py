@@ -3,6 +3,7 @@ from torch import nn
 from models.ModelsUtils import Model
 
 
+# Example model
 class Covid(Model):
     @property
     def y_field_name(self) -> str:
