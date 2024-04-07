@@ -103,7 +103,7 @@ def fit(model, train_loader, valid_loader, x_field_name: str, y_field_name: str,
     model.to(device)
     train_loss_history, valid_loss_history = [], []
     train_accuracy_history, valid_accuracy_history = [], []
-    base_path = f"../model_results/{title}_variants/"
+    base_path = f"model_results/{title}_variants/"
     create_path_if_not_exists(base_path + "chart")
     create_path_if_not_exists(base_path + "tables")
 
