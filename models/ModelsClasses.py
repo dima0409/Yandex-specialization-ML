@@ -28,11 +28,11 @@ class Covid(Model):
     def __init__(self):
         super().__init__()
         self.model = nn.Sequential(
-            DoubleConv(3, 64),
+            DoubleConv(1, 64),
             nn.MaxPool2d(2),
             DoubleConv(64, 128),
             nn.MaxPool2d(2),
-            DoubleConv(128,256),
+            DoubleConv(128, 256),
             nn.MaxPool2d(2),
             DoubleConv(256, 512),
             nn.MaxPool2d(2),
@@ -49,4 +49,6 @@ class Covid(Model):
         )
 
     def forward(self, x):
-        return self.model(x)
+        x = self.model(x)
+        x = x.view(x.size(0), -1)
+        return F.log_softmax(x, dim=1)
