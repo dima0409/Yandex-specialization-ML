@@ -56,7 +56,7 @@ class DataLoadersGenerator:
 
             self.data_loaders.update({i: TrainTestDataLoaders(train_dl, test_dl)})
 
-    def __create_provider(self, transform=None, test_split=0.2, train_batch_size=32, test_batch_size=32):
+    def __create_provider(self, transform=None, test_split=0.2, train_batch_size=16, test_batch_size=16):
         return DatasetInfo(
             LungsCovidDataset(self.csv_file, self.original_root_dir,
                               self.cropped_root_dir, transformation=transform),
