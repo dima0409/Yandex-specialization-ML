@@ -14,7 +14,9 @@ class CovidModels:
     def __init_models(self):
         # Here you can add new models version
         self.models = {
-            "firstModel": create_model_info(Covid(), optimizer=torch.optim.Adam, epochs=3)
+            "firstModel": create_model_info(Covid(), optimizer=torch.optim.SGD, epochs=10, lr=0.01),
+            "secondModel": create_model_info(Covid(), optimizer=torch.optim.Adam, epochs=10, lr=0.001),
+            "thirdModel": create_model_info(Covid(), optimizer=torch.optim.Adagrad, epochs=10, lr=0.1)
         }
 
 
