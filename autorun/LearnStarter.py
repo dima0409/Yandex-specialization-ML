@@ -4,9 +4,28 @@ import torch
 from dataTranforms.DataLoaders import DataLoadersGenerator
 from models.ModelsLearner import CovidModels
 from utils.Utils import fit
+import getopt
+import sys
 
 if __name__ == "__main__":
-    path = "ModelsLearning.xlsx"
+    argv = sys.argv[1:]
+
+    opts, args = getopt.getopt(argv, "s:d:",
+                               ["dataset =", "device ="])
+
+    csv_dir = ""
+    original_dir = ""
+    cropped_dir = ""
+    device = ""
+    for opt, arg in opts:
+        if opt in ['-s', '--dataset']:
+            csv_dir = arg + "train_answers.csv"
+            original_dir = arg + "train_images"
+            cropped_dir = arg + "train_lung_masks"
+        elif opt in ['-d', '--device']:
+            device = arg
+
+    path = "autorun/ModelsLearning.xlsx"
 
     wb_obj = openpyxl.load_workbook(path)
 
@@ -15,11 +34,11 @@ if __name__ == "__main__":
     row = sheet_obj.max_row
 
     # set dataset paths
-    dataLoadersGenerator = DataLoadersGenerator("~/Downloads/data/train_answers.csv",
-                                                "~/Downloads/data/train_images",
-                                                "~/Downloads/data/train_lung_masks")
+    dataLoadersGenerator = DataLoadersGenerator(csv_dir,
+                                                original_dir,
+                                                cropped_dir)
     models = CovidModels()
-    device = torch.device('mps')  # set learning device (Apple Silicon - "mps"; GPU Cuda cores - "cuda"; CPU - "cpu")
+    device = torch.device(device)  # set learning device (Apple Silicon - "mps"; GPU Cuda cores - "cuda"; CPU - "cpu")
 
     if row >= 2:
         for i in range(2, row + 1):
