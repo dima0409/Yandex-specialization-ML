@@ -1,7 +1,6 @@
 import csv
 import multiprocessing as mp
 import os
-
 import matplotlib.pyplot as plt
 import seaborn as sns
 import torch
@@ -49,16 +48,16 @@ def plot_stats(
 
 
 def train(model: nn.Module, data_loader: DataLoader, x_field_name: str, y_field_name: str, optimizer: Optimizer,
-          loss_fn, device: device):
+          loss_fn, device: device, epoch: int):
     model.train()
 
     total_loss = 0
     total_correct = 0
 
-    for sample in tqdm(data_loader):
+    progress_bar = tqdm(data_loader, desc=f"Epoch {epoch}: Training", leave=False)
+    for batch_idx, sample in enumerate(progress_bar):
         x, y = sample[x_field_name].to(device), sample[y_field_name].to(device)
         x = x.to(torch.float32)
-        # y = y.to(torch.float64)
         optimizer.zero_grad()
 
         output = model(x)
@@ -73,27 +72,38 @@ def train(model: nn.Module, data_loader: DataLoader, x_field_name: str, y_field_
 
         optimizer.step()
 
+        avg_loss = total_loss / (batch_idx + 1)
+        accuracy = total_correct / ((batch_idx + 1) * data_loader.batch_size)
+
+        progress_bar.set_postfix({'Loss': avg_loss, 'Accuracy': accuracy})
+
     return total_loss / len(data_loader), total_correct / len(data_loader.dataset)
 
 
 @inference_mode()
-def evaluate(model: nn.Module, data_loader: DataLoader, x_field_name: str, y_field_name: str, loss_fn, device: device):
+def evaluate(model: nn.Module, data_loader: DataLoader, x_field_name: str, y_field_name: str, loss_fn, device: device, epoch: int):
     model.eval()
 
     total_loss = 0
     total_correct = 0
 
-    for sample in tqdm(data_loader):
-        x, y = sample[x_field_name].to(device), sample[y_field_name].to(device)
-        x = x.to(torch.float32)
-        # y = y.to(torch.float32)
-        output = model(x)
+    progress_bar = tqdm(data_loader, desc=f"Epoch {epoch}: Evaluating", leave=False)
+    with torch.no_grad():
+        for batch_idx, sample in enumerate(progress_bar):
+            x, y = sample[x_field_name].to(device), sample[y_field_name].to(device)
+            x = x.to(torch.float32)
+            output = model(x)
 
-        loss = loss_fn(output, y)
+            loss = loss_fn(output, y)
 
-        total_loss += loss.item()
+            total_loss += loss.item()
 
-        total_correct += (output.argmax(dim=1) == y).sum().item()
+            total_correct += (output.argmax(dim=1) == y).sum().item()
+
+            avg_loss = total_loss / (batch_idx + 1)
+            accuracy = total_correct / ((batch_idx + 1) * data_loader.batch_size)
+
+            progress_bar.set_postfix({'Loss': avg_loss, 'Accuracy': accuracy})
 
     return total_loss / len(data_loader), total_correct / len(data_loader.dataset)
 
