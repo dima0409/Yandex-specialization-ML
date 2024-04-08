@@ -29,21 +29,23 @@ class Model(nn.Module):
 
 @dataclass
 class ModelInfo:
-    model: nn.Module
+    model: Any
     loss_fn: Any
-    optimizer: Optimizer
+    optimizer: Any
+    lr: float
     epochs: int
 
 
-def create_model_info(model_object: Model,
+def create_model_info(model,
                       optimizer,
                       loss_fn=nn.CrossEntropyLoss(),
                       lr: float = 1e-3,
                       epochs: int = 100
                       ):
     return ModelInfo(
-        model=model_object,
+        model=model,
         loss_fn=loss_fn,
-        optimizer=optimizer(model_object.parameters(), lr=lr),
+        optimizer=optimizer,
+        lr=lr,
         epochs=epochs
     )

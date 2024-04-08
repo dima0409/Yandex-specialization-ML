@@ -100,7 +100,6 @@ def evaluate(model: nn.Module, data_loader: DataLoader, x_field_name: str, y_fie
 
 def fit(model, train_loader, valid_loader, x_field_name: str, y_field_name: str, optimizer, loss_fn, num_epochs,
         title, device: device):
-    model.to(device)
     train_loss_history, valid_loss_history = [], []
     train_accuracy_history, valid_accuracy_history = [], []
     base_path = f"model_results/{title}_variants/"
