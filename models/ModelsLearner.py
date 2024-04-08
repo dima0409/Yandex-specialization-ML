@@ -1,5 +1,4 @@
 import torch
-
 from dataTranforms.DataLoaders import DataLoadersGenerator
 from models.ModelsClasses import Covid
 from models.ModelsUtils import create_model_info

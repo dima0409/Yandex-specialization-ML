@@ -17,12 +17,10 @@ class DataLoadersGenerator:
         self.__init_dataloaders()
 
     def __init_data_providers(self):
-        # Here you can add new dataset version (add pytorch transform to transform field)
         self.providers_info = {
             'first without augmentation': self.__create_provider()
         }
 
-    # This method generate dataloaders for each provider
     def __init_dataloaders(self):
         def train_test_dataset_split(dataset, test_split: float):
             test_len = int(len(dataset) * test_split)

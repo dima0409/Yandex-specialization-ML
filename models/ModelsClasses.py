@@ -12,6 +12,7 @@ class DoubleConv(nn.Module):
             nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
             nn.ReLU(inplace=True)
         )
+
     def forward(self, x):
         return self.double_conv(x)
 

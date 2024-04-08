@@ -1,11 +1,8 @@
 import csv
-import multiprocessing as mp
 import os
 import matplotlib.pyplot as plt
-import seaborn as sns
 import torch
 import torch.nn as nn
-from IPython.display import clear_output
 from torch import device, inference_mode
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
@@ -39,12 +36,6 @@ def plot_stats(
     plt.pause(0.001)
     if save:
         plt.savefig(save)
-
-
-# def plot_multi_processing(q):
-#     sns.set(style='darkgrid')
-#     info = q.get()
-#     plot_stats(**info)
 
 
 def train(model: nn.Module, data_loader: DataLoader, x_field_name: str, y_field_name: str, optimizer: Optimizer,
@@ -116,23 +107,19 @@ def fit(model, train_loader, valid_loader, x_field_name: str, y_field_name: str,
     create_path_if_not_exists(base_path + "chart")
     create_path_if_not_exists(base_path + "tables")
 
-    # csv field names
     fields = ['Train loss', 'Test loss', 'Train accuracy', 'Test accuracy']
 
-    # name of csv file
     filename = base_path + "tables/metrics.csv"
     with open(filename, 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fields)
 
-        # writing headers (field names)
         writer.writeheader()
 
     for epoch in range(num_epochs):
         print(f"Start epoch {epoch}")
-        train_loss, train_accuracy = train(model, train_loader, x_field_name, y_field_name, optimizer, loss_fn, device)
+        train_loss, train_accuracy = train(model, train_loader, x_field_name, y_field_name, optimizer, loss_fn, device, epoch)
         valid_loss, valid_accuracy = evaluate(model, valid_loader, x_field_name, y_field_name, loss_fn, device)
 
-        # writing to csv file
         with open(filename, 'a') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fields)
 
