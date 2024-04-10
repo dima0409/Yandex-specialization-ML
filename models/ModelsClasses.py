@@ -1,3 +1,4 @@
+import torch
 from torch import nn
 import torch.nn.functional as F
 from models.ModelsUtils import Model
@@ -28,25 +29,28 @@ class Covid(Model):
     def __init__(self):
         super().__init__()
         self.model = nn.Sequential(
-            DoubleConv(1, 64),
-            nn.MaxPool2d(2),
-            DoubleConv(64, 64),
-            nn.MaxPool2d(2),
-            DoubleConv(64, 128),
-            nn.MaxPool2d(2),
-            DoubleConv(128, 256),
-            nn.MaxPool2d(2),
-            DoubleConv(256, 256),
-            nn.ConvTranspose2d(256, 128, kernel_size=2, stride=2),
-            DoubleConv(128, 128),
-            nn.ConvTranspose2d(128, 64, kernel_size=2, stride=2),
-            DoubleConv(64, 64),
-            nn.ConvTranspose2d(64, 32, kernel_size=2, stride=2),
-            DoubleConv(32, 32),
+            nn.Conv2d(1, 32, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.Conv2d(64, 128, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.Conv2d(128, 128, kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Flatten(),
-            nn.Linear(16 * 128 * 256, 3)
+            nn.Linear(128*32*32, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512, 3)
         )
 
     def forward(self, x):
-        x = self.model(x)
-        return F.log_softmax(x, dim=1)
+        return self.model(x)
