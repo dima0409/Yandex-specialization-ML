@@ -1,8 +1,6 @@
 from dataclasses import dataclass
-
 import matplotlib.pyplot as plt
 from torch.utils.data import random_split, DataLoader
-
 from dataTranforms.LungsCovidDataset import LungsCovidDataset
 
 

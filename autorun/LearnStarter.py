@@ -1,6 +1,5 @@
 import openpyxl
 import torch
-
 from dataTranforms.DataLoaders import DataLoadersGenerator
 from models.ModelsLearner import CovidModels
 from utils.Utils import fit
@@ -13,19 +12,12 @@ if __name__ == "__main__":
     opts, args = getopt.getopt(argv, "s:d:",
                                ["dataset =", "device ="])
 
-    csv_dir = ""
-    original_dir = ""
-    cropped_dir = ""
-    device = ""
-    for opt, arg in opts:
-        if opt in ['-s', '--dataset']:
-            csv_dir = arg + "train_answers.csv"
-            original_dir = arg + "train_images"
-            cropped_dir = arg + "train_lung_masks"
-        elif opt in ['-d', '--device']:
-            device = arg
+    csv_dir = "../data/train_answers.csv"
+    original_dir = "../data/train_images"
+    cropped_dir = "../data/train_lung_masks"
+    device = "cpu"
 
-    path = "autorun/ModelsLearning.xlsx"
+    path = "ModelsLearning.xlsx"
 
     wb_obj = openpyxl.load_workbook(path)
 
@@ -38,7 +30,8 @@ if __name__ == "__main__":
                                                 original_dir,
                                                 cropped_dir)
     models = CovidModels()
-    device_obj = torch.device(device)  # set learning device (Apple Silicon - "mps"; GPU Cuda cores - "cuda"; CPU - "cpu")
+    device_obj = torch.device(
+        device)  # set learning device (Apple Silicon - "mps"; GPU Cuda cores - "cuda"; CPU - "cpu")
 
     if row >= 2:
         for i in range(2, row + 1):
@@ -50,13 +43,13 @@ if __name__ == "__main__":
             if status.value in ("", None, "trainable"):
                 print(f"Start learning {version_name}")
 
-                status.value = "progress"
                 wb_obj.save(path)
 
                 dataloaders = dataLoadersGenerator.data_loaders[data_loader_name]
                 model_info = models.models[model_name]
                 model_obj = model_info.model()
                 model_obj.to(device_obj)
+
                 fit(model_obj, train_loader=dataloaders.train_dl, valid_loader=dataloaders.test_dl,
                     x_field_name=model_obj.x_field_name, y_field_name=model_obj.y_field_name,
                     loss_fn=model_info.loss_fn,
@@ -64,8 +57,11 @@ if __name__ == "__main__":
                     num_epochs=model_info.epochs,
                     title=version_name, device=device_obj)
 
+                status.value = "progress"
+
                 wb_obj = openpyxl.load_workbook(path)
                 wb_obj.active.cell(row=i, column=4).value = "done"
+                torch.save(models.models[model_name], f"{version_name}.pth")
 
                 print(f"Finished learning {version_name}")
 

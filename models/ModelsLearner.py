@@ -1,6 +1,7 @@
 import torch
 from dataTranforms.DataLoaders import DataLoadersGenerator
 from models.ModelsClasses import Covid
+from models.Models2Enhanced import XRayClassifier
 from models.ModelsUtils import create_model_info
 from utils.Utils import fit
 
@@ -15,7 +16,9 @@ class CovidModels:
         self.models = {
             "firstModel": create_model_info(Covid, optimizer=torch.optim.SGD, epochs=10, lr=0.01),
             "secondModel": create_model_info(Covid, optimizer=torch.optim.Adam, epochs=10, lr=0.001),
-            "thirdModel": create_model_info(Covid, optimizer=torch.optim.Adagrad, epochs=10, lr=0.1)
+            "thirdModel": create_model_info(Covid, optimizer=torch.optim.Adagrad, epochs=10, lr=0.1),
+            "fourthModel": create_model_info(XRayClassifier, optimizer=torch.optim.Adam, epochs=10, lr=0.01),
+            "fifthModel": create_model_info(XRayClassifier, optimizer=torch.optim.SGD, epochs=10, lr=0.01),
         }
 
 
@@ -24,7 +27,7 @@ if __name__ == "__main__":
     dataLoadersGenerator = DataLoadersGenerator("~/Downloads/data/train_answers.csv", "~/Downloads/data/train_images",
                                                 "~/Downloads/data/train_lung_masks")
     models = CovidModels()
-    device = torch.device('mps')
+    device = torch.device('cpu')
     dataloaders = dataLoadersGenerator.data_loaders['first without augmentation']
     for i in models.models.keys():
         model_info = models.models[i]

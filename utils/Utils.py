@@ -118,7 +118,7 @@ def fit(model, train_loader, valid_loader, x_field_name: str, y_field_name: str,
     for epoch in range(num_epochs):
         print(f"Start epoch {epoch}")
         train_loss, train_accuracy = train(model, train_loader, x_field_name, y_field_name, optimizer, loss_fn, device, epoch)
-        valid_loss, valid_accuracy = evaluate(model, valid_loader, x_field_name, y_field_name, loss_fn, device)
+        valid_loss, valid_accuracy = evaluate(model, valid_loader, x_field_name, y_field_name, loss_fn, device, epoch)
 
         with open(filename, 'a') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fields)
