@@ -14,8 +14,14 @@ class CovidModels:
     def __init_models(self):
         self.models = {
             "firstModel": create_model_info(Covid, optimizer=torch.optim.SGD, epochs=10, lr=0.01),
-            "secondModel": create_model_info(Covid, optimizer=torch.optim.Adam, epochs=10, lr=0.001),
-            "thirdModel": create_model_info(Covid, optimizer=torch.optim.Adagrad, epochs=10, lr=0.1)
+            "firstModel2": create_model_info(Covid, optimizer=torch.optim.SGD, epochs=10, lr=0.005),
+            "firstModel3": create_model_info(Covid, optimizer=torch.optim.SGD, epochs=10, lr=0.001),
+            "secondModel": create_model_info(Covid, optimizer=torch.optim.Adam, epochs=10, lr=0.01),
+            "secondModel2": create_model_info(Covid, optimizer=torch.optim.Adam, epochs=10, lr=0.005),
+            "secondModel3": create_model_info(Covid, optimizer=torch.optim.Adam, epochs=10, lr=0.001),
+            "thirdModel": create_model_info(Covid, optimizer=torch.optim.Adagrad, epochs=10, lr=0.01),
+            "thirdModel2": create_model_info(Covid, optimizer=torch.optim.Adagrad, epochs=10, lr=0.005),
+            "thirdModel3": create_model_info(Covid, optimizer=torch.optim.Adagrad, epochs=10, lr=0.001)
         }
 
 
