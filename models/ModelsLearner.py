@@ -19,6 +19,7 @@ class CovidModels:
             "thirdModel": create_model_info(Covid, optimizer=torch.optim.Adagrad, epochs=10, lr=0.1),
             "fourthModel": create_model_info(XRayClassifier, optimizer=torch.optim.Adam, epochs=10, lr=0.01),
             "fifthModel": create_model_info(XRayClassifier, optimizer=torch.optim.SGD, epochs=10, lr=0.01),
+            "sixthModel": create_model_info(Covid, optimizer=torch.optim.Adam, epochs=10, lr=0.001),
         }
 
 
