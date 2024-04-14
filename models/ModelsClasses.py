@@ -14,9 +14,17 @@ class DepthwiseSeparableConv(nn.Module):
         return x
 
 class Covid(Model):
+    @property
+    def y_field_name(self) -> str:
+        return "labels"
+
+    @property
+    def x_field_name(self) -> str:
+        return "original_image"
+    
     def __init__(self):
-        super(Covid, self).__init__()
-        self.features = nn.Sequential(
+        super().__init__()
+        self.model = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=3, stride=2, padding=1),
             nn.ReLU(inplace=True),
             DepthwiseSeparableConv(32, 64, stride=1),
@@ -43,13 +51,18 @@ class Covid(Model):
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d((1, 1))
         )
+
         self.classifier = nn.Sequential(
             nn.Dropout(0.2),
             nn.Linear(1024, 3)
         )
 
+        # Объединяем модель и классификатор в один nn.Sequential
+        self.model = nn.Sequential(
+            self.model,
+            nn.Flatten(),
+            self.classifier
+        )
+
     def forward(self, x):
-        x = self.features(x)
-        x = x.view(x.size(0), -1)
-        x = self.classifier(x)
-        return F.log_softmax(x, dim=1)
+        return F.log_softmax(self.model(x), dim=1)
