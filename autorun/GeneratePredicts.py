@@ -10,6 +10,9 @@ from models.ModelsClasses import Covid
 from models.ModelsLearner import CovidModels
 from utils.Utils import create_path_if_not_exists
 
+train_images_path = "/Users/max/Downloads/data/test_images"
+device_name = "mps"
+
 if __name__ == "__main__":
     modelsLearner = CovidModels()
 
@@ -37,13 +40,12 @@ if __name__ == "__main__":
 
     modelWeightsPath = f"../model_results/{selectedModelName}_variants/{selectedModelName}_{epoch}_epoch"
 
-    train_images_path = "/Users/max/Downloads/data/test_images"
     predict_path = "../predicts"
 
     predict_filename = predict_path + f"/{selectedModelName}_{epoch}.csv"
     create_path_if_not_exists(predict_path)
     modelClass.load_state_dict(torch.load(modelWeightsPath))
-    modelClass.to(torch.device('mps'))
+    modelClass.to(torch.device(device_name))
     fields = ['Id', 'target_feature']
     with open(predict_filename, 'w') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fields)
@@ -53,6 +55,6 @@ if __name__ == "__main__":
                                     "img_" + str(idx) + ".png")
 
             # Записыываем картинки в переменные
-            image = torch.tensor(io.imread(img_name).reshape(1, 1, 256, 256)).to(torch.device('mps'))
+            image = torch.tensor(io.imread(img_name).reshape(1, 1, 256, 256)).to(torch.device(device_name))
             y = modelClass(image.to(torch.float32))
             writer.writerow({'Id': idx, 'target_feature': y.argmax(dim=1)[0].item()})
