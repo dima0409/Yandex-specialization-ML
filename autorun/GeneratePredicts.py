@@ -14,12 +14,11 @@ if __name__ == "__main__":
 
     row = sheet_obj.max_row
 
-    # set dataset paths
-    dataLoadersGenerator = DataLoadersGenerator("~/Downloads/data/train_answers.csv",
-                                                "~/Downloads/data/train_images",
-                                                "~/Downloads/data/train_lung_masks")
+    dataLoadersGenerator = DataLoadersGenerator("../data/train_answers.csv",
+                                                "../data/train_images",
+                                                "../data/train_lung_masks")
     models = CovidModels()
-    device = torch.device('mps')  # set learning device (Apple Silicon - "mps"; GPU Cuda cores - "cuda"; CPU - "cpu")
+    device = torch.device('cpu')  # set learning device (Apple Silicon - "mps"; GPU Cuda cores - "cuda"; CPU - "cpu")
 
     if row >= 2:
         for i in range(2, row + 1):
