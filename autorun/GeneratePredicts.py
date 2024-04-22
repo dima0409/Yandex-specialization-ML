@@ -1,6 +1,5 @@
 import openpyxl
 import torch
-
 from dataTranforms.DataLoaders import DataLoadersGenerator
 from models.ModelsLearner import CovidModels
 from utils.Utils import fit
